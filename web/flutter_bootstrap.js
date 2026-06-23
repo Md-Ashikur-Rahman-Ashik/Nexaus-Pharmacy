@@ -1,11 +1,10 @@
 {{flutter_js}}
 {{flutter_build_config}}
 
-_flutter.loader.loadEntrypoint({
+_flutter.loader.load({
   onEntrypointLoaded: async function(engineInitializer) {
     let appRunner = async function() {
       let engine = await engineInitializer.initializeEngine({
-        // THIS IS THE MAGIC LINE THAT SKIPS THE HEAVY DOWNLOAD
         renderer: "html"
       });
       await appRunnerEngine(app);
