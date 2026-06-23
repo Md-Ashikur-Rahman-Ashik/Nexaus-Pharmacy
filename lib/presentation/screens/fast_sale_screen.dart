@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pharmacy_app/data/repositories/product_repository.dart';
 import 'package:pharmacy_app/presentation/providers/sale_provider.dart';
 
 class FastSaleScreen extends ConsumerStatefulWidget {
@@ -43,8 +44,6 @@ class _FastSaleScreenState extends ConsumerState<FastSaleScreen> {
             style: const TextStyle(fontSize: 16),
           ),
           const SizedBox(height: 20),
-
-
           Expanded(
             child: searchResults.isEmpty
                 ? const Center(
@@ -67,7 +66,6 @@ class _FastSaleScreenState extends ConsumerState<FastSaleScreen> {
   }
 }
 
-
 class _ProductCard extends StatelessWidget {
   final ProductSearchResult product;
 
@@ -76,7 +74,7 @@ class _ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       elevation: 0,
@@ -115,7 +113,7 @@ class _ProductCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  '৳${product.sellingPrice.toStringAsFixed(0)}', // Taka symbol
+                  '৳${product.sellingPrice.toStringAsFixed(0)}',
                   style: theme.textTheme.titleLarge?.copyWith(
                     color: theme.colorScheme.primary,
                     fontWeight: FontWeight.bold,
@@ -126,7 +124,7 @@ class _ProductCard extends StatelessWidget {
                   onPressed: () {
                     // TODO: Add to cart logic
                   },
-                  child: const Text('যোগ করুন'), // Add
+                  child: const Text('যোগ করুন'),
                 ),
               ],
             ),
