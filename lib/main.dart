@@ -1,5 +1,4 @@
-import 'package:flutter/widgets.dart';
-import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'presentation/app_shell.dart';
 
@@ -17,9 +16,15 @@ class PharmacyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ShadcnApp(
+    return MaterialApp(
       title: 'Nexaus Pharmacy',
       debugShowCheckedModeBanner: false,
+      // Material 3 is the modern standard. The colorSchemeSeed generates a beautiful UI automatically.
+      theme: ThemeData(
+        useMaterial3: true,
+        colorSchemeSeed: const Color(0xFF0284C7), // Medical Blue
+        fontFamily: 'NotoSansBengali', // Will fallback gracefully if not installed yet
+      ),
       home: const AppShell(),
     );
   }
