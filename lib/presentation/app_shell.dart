@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pharmacy_app/presentation/screens/fast_sale_screen.dart';
 
 class AppShell extends StatefulWidget {
   const AppShell({super.key});
@@ -12,7 +13,7 @@ class _AppShellState extends State<AppShell> {
 
   final List<Widget> _screens = const [
     Center(child: Text('ড্যাশবোর্ড (Dashboard)')),
-    Center(child: Text('দ্রুত বিক্রয় (Fast Sale)')),
+    FastSaleScreen(),
     Center(child: Text('ইনভেন্টরি (Inventory)')),
     Center(child: Text('বাকি খাতা (Due Khata)')),
   ];
@@ -20,9 +21,7 @@ class _AppShellState extends State<AppShell> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: _screens[_currentIndex],
-      ),
+      body: SafeArea(child: _screens[_currentIndex]),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _currentIndex,
         onDestinationSelected: (index) {
