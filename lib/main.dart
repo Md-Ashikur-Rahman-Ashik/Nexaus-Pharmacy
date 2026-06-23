@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'lib/presentation/app_shell.dart';
+import 'presentation/app_shell.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
