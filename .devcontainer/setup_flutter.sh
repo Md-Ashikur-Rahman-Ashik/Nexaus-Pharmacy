@@ -12,30 +12,31 @@ unzip -q cmdtools.zip
 rm cmdtools.zip
 mv cmdline-tools latest
 
-# Set Android SDK Environment Variables (Persisted for the workspace)
+# Set Android SDK Environment Variables
 echo 'export ANDROID_SDK_ROOT=/usr/local/lib/android/sdk' >> ~/.bashrc
 echo 'export PATH=$PATH:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/platform-tools' >> ~/.bashrc
-source ~/.bashrc
+export ANDROID_SDK_ROOT=/usr/local/lib/android/sdk
+export PATH=$PATH:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/platform-tools
 
-# 2. Install required SDK packages (API 35, Build Tools, Platform Tools)
+# 2. Install required SDK packages (API 35, Build Tools)
 echo "📦 [INFRA] Installing Android API 35 & Build Tools..."
 yes | sdkmanager --licenses > /dev/null 2>&1
 sdkmanager "platforms;android-35" "build-tools;35.0.0" "platform-tools" > /dev/null
 
-# 3. Install Flutter 4.x Stable
-echo "🐦 [INFRA] Installing Flutter 4.x..."
+# 3. Install Flutter via Git (The Bulletproof Method)
+echo "🐦 [INFRA] Installing latest Flutter Stable via Git..."
 cd /opt
-wget -q https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_4.0.0-stable.tar.xz -O flutter.tar.xz
-tar xf flutter.tar.xz
-rm flutter.tar.xz
+# Cloning the stable branch directly from the official repo
+git clone https://github.com/flutter/flutter.git -b stable --depth 1
 
-# Add Flutter to PATH
+# Add Flutter to PATH for the script
+export PATH=$PATH:/opt/flutter/bin
+# Add Flutter to PATH for future terminal sessions
 echo 'export PATH=$PATH:/opt/flutter/bin' >> ~/.bashrc
-source ~/.bashrc
 
 # 4. Run Flutter Doctor and Precache Artifacts
 echo "🩺 [INFRA] Running Flutter Doctor..."
 flutter doctor -v
 flutter precache --android
 
-echo "✅ [INFRA] Environment setup complete. Flutter $(flutter --version | head -n 1) is ready."
+echo "✅ [INFRA] Environment setup complete."
