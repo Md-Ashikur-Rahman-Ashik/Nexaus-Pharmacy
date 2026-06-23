@@ -26,7 +26,7 @@ class ProductRepository {
 
     // SQLite returns rows as Lists of Lists. We convert them to Maps for easy UI use.
     return results.map((row) {
-      return {
+      return <String, dynamic>{
         'id': row[0],
         'brand_name': row[1],
         'selling_price': row[2],
