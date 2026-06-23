@@ -1,0 +1,14 @@
+{
+  "name": "Pharmacy Flutter Env",
+  "image": "ghcr.io/cirruslabs/flutter:stable",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "Dart-Code.flutter",
+        "Dart-Code.dart-code",
+        "usernamehw.errorlens"
+      ]
+    }
+  },
+  "forwardPorts": [8080]
+}
