@@ -1,29 +1,35 @@
+import 'dart:io';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:sqlite3/sqlite3.dart' as sqlite;
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class PharmacyDatabase {
   static PharmacyDatabase? _instance;
   late sqlite.Database _db;
 
-  // Private constructor for Singleton pattern
   PharmacyDatabase._internal();
 
-  // Factory to return the same instance every time
   static PharmacyDatabase get instance {
     _instance ??= PharmacyDatabase._internal();
     return _instance!;
   }
 
   Future<void> init() async {
-    // In a real app, we'd use path_provider here to get the documents directory.
-    // For web/codespace testing, we use an in-memory database to bypass file permissions!
-    // We will switch to file-based when we test on a physical phone.
-    _db = sqlite.sqlite3.openInMemory(); 
+    if (kIsWeb) {
+      // Fallback for web testing (won't save data)
+      _db = sqlite.sqlite3.openInMemory();
+    } else {
+      // REAL PHYSICAL DEVICE: Save to the app's permanent documents directory
+      final directory = await getApplicationDocumentsDirectory();
+      final path = join(directory.path, 'nexaus_pharmacy.db');
+      _db = sqlite.sqlite3.open(path);
+    }
     
     _createTables();
   }
 
   void _createTables() {
-    // Batch execution for instant setup
     _db.execute('''
       CREATE TABLE IF NOT EXISTS products (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -113,6 +119,5 @@ class PharmacyDatabase {
     ''');
   }
 
-  // Expose the raw database for our repositories to use
   sqlite.Database get database => _db;
 }
