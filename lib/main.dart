@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:shadcn_flutter/shadcn_flutter.dart' hide Colors, RepeatMode;
+import 'package:flutter/widgets.dart';
+import 'package:shadcn_flutter/shadcn_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'presentation/app_shell.dart';
 
@@ -17,8 +17,6 @@ class PharmacyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Stripped down to bare minimum to guarantee compilation.
-    // shadcn's default theme is already modern and beautiful.
     return ShadcnApp(
       title: 'Nexaus Pharmacy',
       debugShowCheckedModeBanner: false,

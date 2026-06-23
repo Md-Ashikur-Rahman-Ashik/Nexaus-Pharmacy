@@ -1,5 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:shadcn_flutter/shadcn_flutter.dart' hide Colors, RepeatMode;
+import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 class AppShell extends StatefulWidget {
   const AppShell({super.key});
@@ -20,6 +19,7 @@ class _AppShellState extends State<AppShell> {
 
   @override
   Widget build(BuildContext context) {
+    // We use Shadcn's Scaffold, not Material's Scaffold
     return Scaffold(
       body: SafeArea(
         child: _screens[_currentIndex],
