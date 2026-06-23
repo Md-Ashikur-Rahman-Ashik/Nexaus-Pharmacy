@@ -1,38 +1,56 @@
 import 'package:pharmacy_app/database/database.dart';
+import 'package:sqlite3/sqlite3.dart' show Row;
+
+class ProductSearchResult {
+  final int id;
+  final String brandName;
+  final double sellingPrice;
+  final String unitType;
+  final int totalStock;
+
+  ProductSearchResult({
+    required this.id,
+    required this.brandName,
+    required this.sellingPrice,
+    required this.unitType,
+    required this.totalStock,
+  });
+}
 
 class ProductRepository {
   final PharmacyDatabase _db;
 
-  // We pass the database instance to the repository
   ProductRepository(this._db);
 
-  // Search products by brand name or generic name (Bengali/English safe)
-  List<Map<String, dynamic>> searchProducts(String query) {
+  List<ProductSearchResult> searchProducts(String query) {
     if (query.isEmpty) return [];
 
-    // Using LIKE for simple, ultra-fast offline searching
-    // The '%' acts as a wildcard (e.g., '%সে%' finds 'সেক্লো')
-    final results = _db.database.select(
-      'SELECT p.id, p.brand_name, p.selling_price, p.unit_type, '
-      'SUM(b.quantity) as total_stock '
-      'FROM products p '
-      'LEFT JOIN batches b ON p.id = b.product_id '
-      'WHERE p.brand_name LIKE ? OR p.generic_name LIKE ? '
-      'GROUP BY p.id '
-      'HAVING total_stock > 0 '
-      'ORDER BY p.brand_name ASC',
-      ['%$query%', '%$query%'],
-    );
+    const sql = '''
+      SELECT p.id, p.brand_name, p.selling_price, p.unit_type, 
+      SUM(b.quantity) as total_stock 
+      FROM products p 
+      LEFT JOIN batches b ON p.id = b.product_id 
+      WHERE p.brand_name LIKE ? OR p.generic_name LIKE ? 
+      GROUP BY p.id 
+      HAVING total_stock > 0 
+      ORDER BY p.brand_name ASC
+    ''';
 
-    // SQLite returns rows as Lists of Lists. We convert them to Maps for easy UI use.
-    return results.map((row) {
-      return <String, dynamic>{
-        'id': row[0],
-        'brand_name': row[1],
-        'selling_price': row[2],
-        'unit_type': row[3],
-        'total_stock': row[4],
-      };
-    }).toList();
+    final results = _db.database.select(sql, ['%$query%', '%$query%']);
+
+    final List<ProductSearchResult> output = [];
+    for (final Row row in results) {
+      output.add(
+        ProductSearchResult(
+          id: row.columnAt(0) as int,
+          brandName: row.columnAt(1) as String,
+          sellingPrice: (row.columnAt(2) as num).toDouble(),
+          unitType: row.columnAt(3) as String,
+          totalStock: row.columnAt(4) as int,
+        ),
+      );
+    }
+
+    return output;
   }
 }

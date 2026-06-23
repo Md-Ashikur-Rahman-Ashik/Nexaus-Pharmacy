@@ -2,13 +2,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pharmacy_app/data/repositories/product_repository.dart';
 import 'package:pharmacy_app/database/database.dart';
 
-
 final productRepositoryProvider = Provider<ProductRepository>((ref) {
   return ProductRepository(PharmacyDatabase.instance);
 });
 
-
-class SearchNotifier extends StateNotifier<List<Map<String, dynamic>>> {
+class SearchNotifier extends StateNotifier<List<ProductSearchResult>> {
   final ProductRepository _repository;
 
   SearchNotifier(this._repository) : super([]);
@@ -22,8 +20,8 @@ class SearchNotifier extends StateNotifier<List<Map<String, dynamic>>> {
   }
 }
 
-
-final searchProvider = StateNotifierProvider<SearchNotifier, List<Map<String, dynamic>>>((ref) {
-  final repo = ref.watch(productRepositoryProvider);
-  return SearchNotifier(repo);
-});
+final searchProvider =
+    StateNotifierProvider<SearchNotifier, List<ProductSearchResult>>((ref) {
+      final repo = ref.watch(productRepositoryProvider);
+      return SearchNotifier(repo);
+    });
