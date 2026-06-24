@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pharmacy_app/data/repositories/product_repository.dart';
 import 'package:pharmacy_app/presentation/providers/sale_provider.dart';
+import 'package:pharmacy_app/database/database.dart';
 
 class FastSaleScreen extends ConsumerStatefulWidget {
   const FastSaleScreen({super.key});
@@ -12,6 +13,31 @@ class FastSaleScreen extends ConsumerStatefulWidget {
 
 class _FastSaleScreenState extends ConsumerState<FastSaleScreen> {
   final TextEditingController _searchController = TextEditingController();
+
+  void _loadDemoData() {
+    final db = PharmacyDatabase.instance.database;
+    
+    // Insert Dummy Company
+    db.execute("INSERT OR IGNORE INTO companies (id, name) VALUES (1, 'বেক্সিমকো ফার্মা')");
+
+    // Insert Dummy Products
+    db.execute("INSERT OR IGNORE INTO products (id, brand_name, generic_name, unit_type, selling_price) VALUES (1, 'নাপা ৫০০mg', 'প্যারাসিটামল', 'স্ট্রিপ', 80.0)");
+    db.execute("INSERT OR IGNORE INTO products (id, brand_name, generic_name, unit_type, selling_price) VALUES (2, 'সেক্লো ২০mg', 'ওমেপ্রাজল', 'বক্স', 450.0)");
+    db.execute("INSERT OR IGNORE INTO products (id, brand_name, generic_name, unit_type, selling_price) VALUES (3, 'এমোক্সিল ৫০০mg', 'অ্যামোক্সিসিলিন', 'ক্যাপসুল', 120.0)");
+    db.execute("INSERT OR IGNORE INTO products (id, brand_name, generic_name, unit_type, selling_price) VALUES (4, 'অর্ভাস এম', 'অর্টিকাস্টেরয়েড', 'ইনহেলার', 850.0)");
+    db.execute("INSERT OR IGNORE INTO products (id, brand_name, generic_name, unit_type, selling_price) VALUES (5, 'নেক্সাম সি.ভি', 'সেফালেক্সিন', 'ক্যাপসুল', 350.0)");
+
+    // Insert Dummy Batches (So they have stock)
+    db.execute("INSERT OR IGNORE INTO batches (id, product_id, batch_number, expiry_date, cost_price, quantity) VALUES (1, 1, 'NPA24A', 1735689600000, 65.0, 150)");
+    db.execute("INSERT OR IGNORE INTO batches (id, product_id, batch_number, expiry_date, cost_price, quantity) VALUES (2, 2, 'SCL24B', 1767225600000, 380.0, 40)");
+    db.execute("INSERT OR IGNORE INTO batches (id, product_id, batch_number, expiry_date, cost_price, quantity) VALUES (3, 3, 'AMX24C', 1735689600000, 95.0, 200)");
+    db.execute("INSERT OR IGNORE INTO batches (id, product_id, batch_number, expiry_date, cost_price, quantity) VALUES (4, 4, 'ORV24D', 1767225600000, 700.0, 15)");
+    db.execute("INSERT OR IGNORE INTO batches (id, product_id, batch_number, expiry_date, cost_price, quantity) VALUES (5, 5, 'NXC24E', 1735689600000, 280.0, 80)");
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('ডেমো ডেটা লোড সম্পন্ন! এখন খুঁজুন।')),
+    );
+  }
 
   @override
   void dispose() {
@@ -27,6 +53,18 @@ class _FastSaleScreenState extends ConsumerState<FastSaleScreen> {
       padding: const EdgeInsets.all(16.0),
       child: Column(
         children: [
+          // TEMPORARY DEMO BUTTON
+          OutlinedButton.icon(
+            onPressed: _loadDemoData,
+            icon: const Icon(Icons.download),
+            label: const Text('ডেমো মেডিসিন লোড করুন (Tap once)'),
+            style: OutlinedButton.styleFrom(
+              foregroundColor: Colors.orange,
+              side: const BorderSide(color: Colors.orange),
+            ),
+          ),
+          const SizedBox(height: 16),
+
           TextField(
             controller: _searchController,
             onChanged: (query) {
@@ -74,7 +112,7 @@ class _ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
+    
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       elevation: 0,
