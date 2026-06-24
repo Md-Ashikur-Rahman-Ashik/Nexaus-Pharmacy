@@ -167,7 +167,7 @@ class _FastSaleScreenState extends ConsumerState<FastSaleScreen> {
                   decoration: BoxDecoration(
                     color: theme.colorScheme.surface,
                     boxShadow: [
-                      BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 4, offset: const Offset(0, -2))
+                      BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 4, offset: const Offset(0, -2))
                     ],
                   ),
                   child: SafeArea(
