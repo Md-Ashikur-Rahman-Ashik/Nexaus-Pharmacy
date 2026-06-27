@@ -1,6 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// A clean data model for an item in the cart
 class CartItem {
   final int productId;
   final int batchId;
@@ -21,38 +20,32 @@ class CartItem {
   double get subtotal => sellingPrice * quantity;
 }
 
-// The StateNotifier that manages the cart list
 class CartNotifier extends StateNotifier<List<CartItem>> {
   CartNotifier() : super([]);
 
-  // Add item or increment quantity if it already exists
   void addItem(CartItem newItem) {
-    final existingIndex = state.indexWhere((item) => item.batchId == newItem.batchId);
+    // FIX: Check by productId instead of batchId
+    final existingIndex = state.indexWhere((item) => item.productId == newItem.productId);
     
     if (existingIndex >= 0) {
-      // Item already in cart, just increase quantity
       state[existingIndex].quantity += newItem.quantity;
-      // Force UI update by creating a new list instance
       state = [...state];
     } else {
-      // New item, add to cart
       state = [...state, newItem];
     }
   }
 
-  // Remove item completely
-  void removeItem(int batchId) {
-    state = state.where((item) => item.batchId != batchId).toList();
+  void removeItem(int productId) { // FIX: changed argument
+    state = state.where((item) => item.productId != productId).toList(); // FIX: changed logic
   }
 
-  // Update quantity (e.g., plus/minus buttons)
-  void updateQuantity(int batchId, int newQuantity) {
+  void updateQuantity(int productId, int newQuantity) { // FIX: changed argument
     if (newQuantity <= 0) {
-      removeItem(batchId);
+      removeItem(productId);
       return;
     }
     state = state.map((item) {
-      if (item.batchId == batchId) {
+      if (item.productId == productId) { // FIX: changed logic
         return CartItem(
           productId: item.productId,
           batchId: item.batchId,
@@ -66,16 +59,13 @@ class CartNotifier extends StateNotifier<List<CartItem>> {
     }).toList();
   }
 
-  // Calculate grand total
   double get grandTotal => state.fold(0.0, (sum, item) => sum + item.subtotal);
 
-  // Clear cart after sale
   void clearCart() {
     state = [];
   }
 }
 
-// Expose to UI
 final cartProvider = StateNotifierProvider<CartNotifier, List<CartItem>>((ref) {
   return CartNotifier();
 });
