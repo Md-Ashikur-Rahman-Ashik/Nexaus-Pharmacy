@@ -78,12 +78,12 @@ class _FastSaleScreenState extends ConsumerState<FastSaleScreen> {
                             final product = searchResults[index];
                             return ListTile(
                               title: Text(product.brandName, style: const TextStyle(fontWeight: FontWeight.bold)),
-                              subtitle: Text('স্টক: ${product.totalStock} ${product.unitType} | ৳${product.sellingPrice.toStringAsFixed(0)}'),
+                              subtitle: Text('স্টক: ${product.availableStock} ${product.unitType} | ৳${product.sellingPrice.toStringAsFixed(0)}'),
                               trailing: FilledButton.tonal(
                                 onPressed: () {
                                   cartNotifier.addItem(CartItem(
                                     productId: product.id,
-                                    batchId: 0, // Simplified for UI demo
+                                    batchId: product.batchId, // Simplified for UI demo
                                     brandName: product.brandName,
                                     unitType: product.unitType,
                                     sellingPrice: product.sellingPrice,
