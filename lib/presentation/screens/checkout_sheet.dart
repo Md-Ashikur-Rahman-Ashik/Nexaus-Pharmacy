@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:pharmacy_app/presentation/providers/cart_provider.dart';
 
 class CheckoutSheet extends StatefulWidget {
   final double grandTotal;
@@ -54,7 +53,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
             // Grand Total Display
             Container(
               padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(color: theme.colorScheme.primaryContainer, borderRadius: BorderRadius.circular(12)),
+              decoration: BoxDecoration(color: theme.colorScheme.primaryContainer, borderRadius: const BorderRadius.circular(12)),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -83,7 +82,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
             if (dueAmount > 0) ...[
               Container(
                 padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(color: Colors.orange.shade50, borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.orange)),
+                decoration: BoxDecoration(color: Colors.orange.shade50, borderRadius: const BorderRadius.circular(8), border: const Border.all(color: Colors.orange)),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
