@@ -1,7 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pharmacy_app/data/repositories/product_repository.dart';
+import 'package:pharmacy_app/data/repositories/sales_repository.dart';
 import 'package:pharmacy_app/database/database.dart';
 
+// Product Search Providers
 final productRepositoryProvider = Provider<ProductRepository>((ref) {
   return ProductRepository(PharmacyDatabase.instance);
 });
@@ -20,8 +22,12 @@ class SearchNotifier extends StateNotifier<List<ProductSearchResult>> {
   }
 }
 
-final searchProvider =
-    StateNotifierProvider<SearchNotifier, List<ProductSearchResult>>((ref) {
-      final repo = ref.watch(productRepositoryProvider);
-      return SearchNotifier(repo);
-    });
+final searchProvider = StateNotifierProvider<SearchNotifier, List<ProductSearchResult>>((ref) {
+  final repo = ref.watch(productRepositoryProvider);
+  return SearchNotifier(repo);
+});
+
+// Sales Provider
+final salesRepositoryProvider = Provider<SalesRepository>((ref) {
+  return SalesRepository(PharmacyDatabase.instance);
+});
