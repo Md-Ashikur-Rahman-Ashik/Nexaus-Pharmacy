@@ -103,7 +103,7 @@ class _ReceiveStockScreenState extends State<ReceiveStockScreen> {
                 const SizedBox(width: 12),
                 Expanded(
                   child: DropdownButtonFormField<String>(
-                    value: _unitType,
+                    initialValue: _unitType,
                     decoration: const InputDecoration(labelText: 'ইউনিট'),
                     items: const [
                       DropdownMenuItem(value: 'স্ট্রিপ', child: Text('স্ট্রিপ')),
