@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:pharmacy_app/presentation/screens/dashboard_screen.dart';
 import 'package:pharmacy_app/presentation/screens/fast_sale_screen.dart';
-import 'package:pharmacy_app/presentation/screens/due_khata_screen.dart';
 import 'package:pharmacy_app/presentation/screens/receive_stock_screen.dart';
+import 'package:pharmacy_app/presentation/screens/due_khata_screen.dart';
 
 class AppShell extends StatefulWidget {
   const AppShell({super.key});
@@ -14,9 +15,9 @@ class _AppShellState extends State<AppShell> {
   int _currentIndex = 0;
 
   final List<Widget> _screens = const [
-    Center(child: Text('ড্যাশবোর্ড (Dashboard)')),
+    DashboardScreen(), // <-- PLUGGED IN
     FastSaleScreen(),
-    ReceiveStockScreen(), // <-- PLUGGED IN HERE
+    ReceiveStockScreen(),
     DueKhataScreen(),
   ];
 
