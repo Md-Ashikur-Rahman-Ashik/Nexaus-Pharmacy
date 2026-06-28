@@ -1,7 +1,6 @@
 import 'package:pharmacy_app/presentation/providers/sale_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pharmacy_app/presentation/providers/sale_provider.dart';
 import 'package:pharmacy_app/presentation/providers/cart_provider.dart';
 import 'package:pharmacy_app/database/database.dart';
 
