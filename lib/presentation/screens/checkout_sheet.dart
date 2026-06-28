@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pharmacy_app/presentation/providers/cart_provider.dart';
 
 class CheckoutSheet extends StatefulWidget {
   final double grandTotal;
@@ -23,7 +24,6 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
   @override
   void initState() {
     super.initState();
-    // Default to full cash payment
     _paidController.text = widget.grandTotal.toStringAsFixed(0);
     dueAmount = 0.0;
   }
@@ -50,10 +50,12 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
             Text('বিক্রয় নিশ্চিত করুন', style: theme.textTheme.titleLarge),
             const SizedBox(height: 20),
             
-            // Grand Total Display
             Container(
               padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(color: theme.colorScheme.primaryContainer, borderRadius: const BorderRadius.circular(12)),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.primaryContainer,
+                borderRadius: BorderRadius.circular(12)
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -64,25 +66,27 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
             ),
             const SizedBox(height: 20),
 
-            // Cash Received Input
             TextField(
               controller: _paidController,
               keyboardType: const TextInputType.numberWithOptions(decimal: true),
               inputFormatters: [FilteringTextInputFormatter.deny(RegExp(r'[^0-9.]'))],
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'গ্রহণকৃত ক্যাশ (Cash Received)',
                 prefixText: '৳ ',
-                border: const OutlineInputBorder(),
+                border: OutlineInputBorder(),
               ),
               onChanged: (_) => _calculateDue(),
             ),
             const SizedBox(height: 16),
 
-            // Due Display (Only show if > 0)
             if (dueAmount > 0) ...[
               Container(
                 padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(color: Colors.orange.shade50, borderRadius: const BorderRadius.circular(8), border: const Border.all(color: Colors.orange)),
+                decoration: BoxDecoration(
+                  color: Colors.orange.shade50, 
+                  borderRadius: BorderRadius.circular(8), 
+                  border: Border.all(color: Colors.orange)
+                ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -93,14 +97,13 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
               ),
               const SizedBox(height: 16),
               
-              // Customer Name Input (Only ask if there is Due)
               TextField(
                 controller: _customerController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'গ্রাহকের নাম (Customer Name)',
                   hintText: 'যেমন: করিম সাহেব',
-                  border: const OutlineInputBorder(),
-                  prefixIcon: const Icon(Icons.person_outline),
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.person_outline),
                 ),
               ),
               const SizedBox(height: 8),
@@ -108,7 +111,6 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
               const SizedBox(height: 16),
             ],
 
-            // Confirm Button
             SizedBox(
               width: double.infinity,
               height: 50,
