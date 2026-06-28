@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:pharmacy_app/presentation/providers/cart_provider.dart';
 
 class CheckoutSheet extends StatefulWidget {
   final double grandTotal;
