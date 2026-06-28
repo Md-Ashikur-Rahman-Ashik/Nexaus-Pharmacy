@@ -1,5 +1,4 @@
 import 'package:pharmacy_app/database/database.dart';
-import 'package:sqlite3/sqlite3.dart' show Row;
 
 class PurchaseRepository {
   final PharmacyDatabase _db;
@@ -25,17 +24,25 @@ class PurchaseRepository {
       db.execute('BEGIN TRANSACTION');
 
       // 1. Get or Create Company
-      var companyResult = db.select('SELECT id FROM companies WHERE name = ?', [companyName]);
+      var companyResult = db.select('SELECT id FROM companies WHERE name = ?', [
+        companyName,
+      ]);
       int companyId;
       if (companyResult.isEmpty) {
-        db.execute('INSERT INTO companies (name, total_due) VALUES (?, ?)', [companyName, 0.0]);
+        db.execute('INSERT INTO companies (name, total_due) VALUES (?, ?)', [
+          companyName,
+          0.0,
+        ]);
         companyId = db.lastInsertRowId;
       } else {
         companyId = companyResult.first.columnAt(0) as int;
       }
 
       // 2. Get or Create Product
-      var productResult = db.select('SELECT id FROM products WHERE brand_name = ?', [brandName]);
+      var productResult = db.select(
+        'SELECT id FROM products WHERE brand_name = ?',
+        [brandName],
+      );
       int productId;
       if (productResult.isEmpty) {
         db.execute(
@@ -50,7 +57,13 @@ class PurchaseRepository {
       // 3. Create Purchase Transaction Header (We owe the company money)
       db.execute(
         'INSERT INTO purchase_transactions (company_id, date, total_bill, paid_amount, due_amount) VALUES (?, ?, ?, ?, ?)',
-        [companyId, currentTime, totalBill, 0.0, totalBill], // Assuming 100% credit from company
+        [
+          companyId,
+          currentTime,
+          totalBill,
+          0.0,
+          totalBill,
+        ], // Assuming 100% credit from company
       );
       final transactionId = db.lastInsertRowId;
 
