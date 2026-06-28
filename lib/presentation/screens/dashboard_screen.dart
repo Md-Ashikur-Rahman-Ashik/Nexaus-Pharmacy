@@ -108,8 +108,8 @@ class _MetricCard extends StatelessWidget {
     return Expanded(
       child: Card(
         elevation: 0,
-        color: color.withOpacity(0.1),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12), side: BorderSide(color: color.withOpacity(0.3))),
+        color: color.withValues(alpha: 0.1),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12), side: BorderSide(color: color.withValues(alpha: 0.3))),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
