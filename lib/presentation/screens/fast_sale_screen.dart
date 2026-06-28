@@ -146,12 +146,12 @@ class _FastSaleScreenState extends ConsumerState<FastSaleScreen> {
                               children: [
                                 IconButton(
                                   icon: const Icon(Icons.remove_circle_outline, size: 20),
-                                  onPressed: () => cartNotifier.updateQuantity(item.productId, item.quantity - 1),
+                                  onPressed: () => cartNotifier.updateQuantity(item.batchId, item.quantity - 1),
                                 ),
                                 Text('${item.quantity}', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                                 IconButton(
                                   icon: const Icon(Icons.add_circle_outline, size: 20),
-                                  onPressed: () => cartNotifier.updateQuantity(item.productId, item.quantity + 1),
+                                  onPressed: () => cartNotifier.updateQuantity(item.batchId, item.quantity + 1),
                                 ),
                               ],
                             ),
