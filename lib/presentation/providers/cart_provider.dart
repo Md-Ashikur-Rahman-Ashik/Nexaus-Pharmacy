@@ -24,8 +24,8 @@ class CartNotifier extends StateNotifier<List<CartItem>> {
   CartNotifier() : super([]);
 
   void addItem(CartItem newItem) {
-    // FIX: Check by productId instead of batchId
-    final existingIndex = state.indexWhere((item) => item.productId == newItem.productId);
+    // Reverted to batchId: One cart line = One physical batch being deducted
+    final existingIndex = state.indexWhere((item) => item.batchId == newItem.batchId);
     
     if (existingIndex >= 0) {
       state[existingIndex].quantity += newItem.quantity;
@@ -35,17 +35,17 @@ class CartNotifier extends StateNotifier<List<CartItem>> {
     }
   }
 
-  void removeItem(int productId) { // FIX: changed argument
-    state = state.where((item) => item.productId != productId).toList(); // FIX: changed logic
+  void removeItem(int batchId) {
+    state = state.where((item) => item.batchId != batchId).toList();
   }
 
-  void updateQuantity(int productId, int newQuantity) { // FIX: changed argument
+  void updateQuantity(int batchId, int newQuantity) {
     if (newQuantity <= 0) {
-      removeItem(productId);
+      removeItem(batchId);
       return;
     }
     state = state.map((item) {
-      if (item.productId == productId) { // FIX: changed logic
+      if (item.batchId == batchId) {
         return CartItem(
           productId: item.productId,
           batchId: item.batchId,
