@@ -122,7 +122,7 @@ class _DueKhataScreenState extends State<DueKhataScreen> {
                               const SizedBox(height: 8),
                               OutlinedButton.icon(
                                 onPressed: () => _showPaymentDialog(debtor),
-                                icon: Icon(Icons.payment, size: 18),
+                                icon: const Icon(Icons.payment, size: 18),
                                 label: const Text('জমা', style: TextStyle(fontSize: 12)),
                                 style: OutlinedButton.styleFrom(foregroundColor: Colors.green, side: const BorderSide(color: Colors.green)),
                               ),
