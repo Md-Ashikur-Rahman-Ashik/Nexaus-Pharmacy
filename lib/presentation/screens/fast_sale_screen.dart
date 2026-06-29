@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pharmacy_app/presentation/providers/sale_provider.dart';
 import 'package:pharmacy_app/presentation/providers/cart_provider.dart';
 import 'package:pharmacy_app/presentation/screens/checkout_sheet.dart';
-import 'package:pharmacy_app/database/database.dart';
 
 class FastSaleScreen extends ConsumerStatefulWidget {
   const FastSaleScreen({super.key});
@@ -15,25 +14,13 @@ class FastSaleScreen extends ConsumerStatefulWidget {
 class _FastSaleScreenState extends ConsumerState<FastSaleScreen> {
   final TextEditingController _searchController = TextEditingController();
 
-  void _loadDemoData() {
-    final db = PharmacyDatabase.instance.database;
-    db.execute("INSERT OR IGNORE INTO companies (id, name) VALUES (1, 'বেক্সিমকো ফার্মা')");
-    db.execute("INSERT OR IGNORE INTO products (id, brand_name, generic_name, unit_type, selling_price) VALUES (1, 'নাপা ৫০০mg', 'প্যারাসিটামল', 'স্ট্রিপ', 80.0)");
-    db.execute("INSERT OR IGNORE INTO products (id, brand_name, generic_name, unit_type, selling_price) VALUES (2, 'সেক্লো ২০mg', 'ওমেপ্রাজল', 'বক্স', 450.0)");
-    db.execute("INSERT OR IGNORE INTO products (id, brand_name, generic_name, unit_type, selling_price) VALUES (3, 'এমোক্সিল ৫০০mg', 'অ্যামোক্সিসিলিন', 'ক্যাপসুল', 120.0)");
-    db.execute("INSERT OR IGNORE INTO batches (id, product_id, batch_number, expiry_date, cost_price, quantity) VALUES (1, 1, 'NPA24A', 1735689600000, 65.0, 150)");
-    db.execute("INSERT OR IGNORE INTO batches (id, product_id, batch_number, expiry_date, cost_price, quantity) VALUES (2, 2, 'SCL24B', 1767225600000, 380.0, 40)");
-    db.execute("INSERT OR IGNORE INTO batches (id, product_id, batch_number, expiry_date, cost_price, quantity) VALUES (3, 3, 'AMX24C', 1735689600000, 95.0, 200)");
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('ডেমো ডেটা লোড সম্পন্ন!')));
-  }
-
   void _openCheckout() {
     final cart = ref.read(cartProvider);
     if (cart.isEmpty) return;
 
     showModalBottomSheet(
       context: context,
-      isScrollControlled: true, // Important for keyboard pushing up the sheet
+      isScrollControlled: true,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (context) => CheckoutSheet(
         grandTotal: ref.read(cartProvider.notifier).grandTotal,
@@ -75,13 +62,6 @@ class _FastSaleScreenState extends ConsumerState<FastSaleScreen> {
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
-                OutlinedButton.icon(
-                  onPressed: _loadDemoData,
-                  icon: const Icon(Icons.download, size: 16),
-                  label: const Text('ডেমো মেডিসিন লোড করুন', style: TextStyle(fontSize: 12)),
-                  style: OutlinedButton.styleFrom(foregroundColor: Colors.orange, side: const BorderSide(color: Colors.orange)),
-                ),
-                const SizedBox(height: 12),
                 TextField(
                   controller: _searchController,
                   onChanged: (query) => ref.read(searchProvider.notifier).updateQuery(query),
@@ -106,14 +86,7 @@ class _FastSaleScreenState extends ConsumerState<FastSaleScreen> {
                               subtitle: Text('স্টক: ${product.availableStock} ${product.unitType} | ৳${product.sellingPrice.toStringAsFixed(0)}'),
                               trailing: FilledButton.tonal(
                                 onPressed: () {
-                                  cartNotifier.addItem(CartItem(
-                                    productId: product.id,
-                                    batchId: product.batchId,
-                                    brandName: product.brandName,
-                                    unitType: product.unitType,
-                                    sellingPrice: product.sellingPrice,
-                                    quantity: 1,
-                                  ));
+                                  cartNotifier.addItem(CartItem(productId: product.id, batchId: product.batchId, brandName: product.brandName, unitType: product.unitType, sellingPrice: product.sellingPrice, quantity: 1));
                                   _searchController.clear();
                                   ref.read(searchProvider.notifier).clearSearch();
                                 },
@@ -127,9 +100,7 @@ class _FastSaleScreenState extends ConsumerState<FastSaleScreen> {
             ),
           ),
         ),
-
         const Divider(height: 1, thickness: 2),
-
         Expanded(
           flex: 2,
           child: Column(
@@ -141,8 +112,7 @@ class _FastSaleScreenState extends ConsumerState<FastSaleScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text('কার্ট (${cart.length} আইটেম)', style: const TextStyle(fontWeight: FontWeight.bold)),
-                    if (cart.isNotEmpty)
-                      IconButton(icon: const Icon(Icons.delete_outline, color: Colors.red), onPressed: () => cartNotifier.clearCart(), tooltip: 'কার্ট মুছুন')
+                    if (cart.isNotEmpty) IconButton(icon: const Icon(Icons.delete_outline, color: Colors.red), onPressed: () => cartNotifier.clearCart(), tooltip: 'কার্ট মুছুন')
                   ],
                 ),
               ),
@@ -184,7 +154,6 @@ class _FastSaleScreenState extends ConsumerState<FastSaleScreen> {
                             Text('৳${cartNotifier.grandTotal.toStringAsFixed(2)}', style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold, color: theme.colorScheme.primary)),
                           ],
                         ),
-                        // Notice we call _openCheckout now!
                         FilledButton.icon(onPressed: _openCheckout, icon: const Icon(Icons.receipt_long), label: const Text('বিক্রয় সম্পন্ন করুন')),
                       ],
                     ),
