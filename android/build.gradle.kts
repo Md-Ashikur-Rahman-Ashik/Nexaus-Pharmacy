@@ -22,3 +22,17 @@ subprojects {
 tasks.register<Delete>("clean") {
     delete(rootProject.layout.buildDirectory)
 }
+
+// Force all subproject dependencies/plugins to use your app's compileSdk target
+subprojects {
+    afterEvaluate {
+        if (project.hasProperty("android")) {
+            val androidExtension = project.extensions.findByName("android")
+            if (androidExtension != null) {
+                // Dynamically sets the compilation target to 36 across all plugins
+                @Suppress("UnstableApiUsage")
+                (androidExtension as com.android.build.api.dsl.CommonExtension<*, *, *, *, *, *>).compileSdk = 36
+            }
+        }
+    }
+}
