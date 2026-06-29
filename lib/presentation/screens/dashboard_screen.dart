@@ -22,15 +22,16 @@ class DashboardScreen extends ConsumerWidget {
           subject: 'Nexaus Pharmacy Backup - ${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}',
         );
       } else {
+        if (!context.mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('কোনো ডাটাবেস পাওয়া যায়নি!')));
       }
     } catch (e) {
+      if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('ব্যাকআপ ত্রুটি: $e'), backgroundColor: Colors.red));
     }
   }
 
   Future<void> _restoreDatabase(BuildContext context) async {
-    // Warning Dialog
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -43,7 +44,7 @@ class DashboardScreen extends ConsumerWidget {
       ),
     );
 
-    if (confirm != true) return;
+    if (confirm != true || !context.mounted) return;
 
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -56,27 +57,20 @@ class DashboardScreen extends ConsumerWidget {
         final dir = await getApplicationDocumentsDirectory();
         final targetPath = '${dir.path}/nexaus_pharmacy.db';
 
-        // CRITICAL: Close database engine before overwriting file
         PharmacyDatabase.instance.close();
-
-        // Overwrite file
         await sourceFile.copy(targetPath);
-
-        // Re-initialize engine
         await PharmacyDatabase.instance.init();
 
-        if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('সফলভাবে ডাটাবেস রিস্টোর হয়েছে! অ্যাপ রিফ্রেশ করুন।'), backgroundColor: Colors.green),
-          );
-        }
-      }
-    } catch (e) {
-      if (context.mounted) {
+        if (!context.mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('রিস্টোর ত্রুটি: $e'), backgroundColor: Colors.red),
+          const SnackBar(content: Text('সফলভাবে ডাটাবেস রিস্টোর হয়েছে! অ্যাপ রিফ্রেশ করুন।'), backgroundColor: Colors.green),
         );
       }
+    } catch (e) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('রিস্টোর ত্রুটি: $e'), backgroundColor: Colors.red),
+      );
     }
   }
 
@@ -136,7 +130,6 @@ class DashboardScreen extends ConsumerWidget {
                 ),
               )),
 
-            // PRODUCTION HARDENING: Backup & Restore
             const SizedBox(height: 40),
             const Divider(),
             const SizedBox(height: 16),
@@ -163,7 +156,7 @@ class DashboardScreen extends ConsumerWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 40), // Extra padding at bottom
+            const SizedBox(height: 40),
           ],
         ),
         loading: () => const Center(child: CircularProgressIndicator()),
