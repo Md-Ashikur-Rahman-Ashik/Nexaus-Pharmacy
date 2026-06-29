@@ -1,5 +1,7 @@
 plugins {
     id("com.android.application")
+    // Added the missing Kotlin Android Gradle plugin required to compile Kotlin files
+    id("org.jetbrains.kotlin.android") 
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
 }
