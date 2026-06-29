@@ -24,14 +24,6 @@ tasks.register<Delete>("clean") {
 }
 
 subprojects {
-    plugins.withId("com.android.application") {
-        extensions.configure<com.android.build.api.dsl.ApplicationExtension> {
-            compileSdk = 36
-        }
-    }
-    plugins.withId("com.android.library") {
-        extensions.configure<com.android.build.api.dsl.LibraryExtension> {
-            compileSdk = 36
-        }
-    }
+    val androidExtension = project.extensions.findByName("android") as? com.android.build.gradle.BaseExtension
+    androidExtension?.compileSdkVersion(36)
 }
