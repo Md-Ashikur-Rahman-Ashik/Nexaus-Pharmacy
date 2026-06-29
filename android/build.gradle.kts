@@ -24,14 +24,12 @@ tasks.register<Delete>("clean") {
 }
 
 subprojects {
-    afterEvaluate {
-        if (project.hasProperty("android")) {
-            extensions.configure<com.android.build.api.dsl.ApplicationExtension> {
-                compileSdk = 36
-            }
-            extensions.configure<com.android.build.api.dsl.LibraryExtension> {
-                compileSdk = 36
-            }
+    if (project.hasProperty("android")) {
+        extensions.configure<com.android.build.api.dsl.ApplicationExtension> {
+            compileSdk = 36
+        }
+        extensions.configure<com.android.build.api.dsl.LibraryExtension> {
+            compileSdk = 36
         }
     }
 }
