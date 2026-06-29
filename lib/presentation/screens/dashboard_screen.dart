@@ -47,7 +47,7 @@ class DashboardScreen extends ConsumerWidget {
     if (confirm != true || !context.mounted) return;
 
     try {
-      FilePickerResult? result = await FilePicker.platform.pickFiles(
+      FilePickerResult? result = await FilePicker.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['db'],
       );
