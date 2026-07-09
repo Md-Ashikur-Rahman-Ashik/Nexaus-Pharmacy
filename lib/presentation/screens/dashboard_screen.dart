@@ -17,10 +17,12 @@ class DashboardScreen extends ConsumerWidget {
       final file = File(dbPath);
 
       if (await file.exists()) {
-        await Share.shareXFiles(
-          [XFile(dbPath)],
-          subject:
-              'Nexaus Pharmacy Backup - ${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}',
+        await SharePlus.instance.share(
+          ShareParams(
+            files: [XFile(dbPath)],
+            subject:
+                'Nexaus Pharmacy Backup - ${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}',
+          ),
         );
       } else {
         if (!context.mounted) return;

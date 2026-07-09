@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 import 'package:pharmacy_app/data/repositories/product_repository.dart';
 import 'package:pharmacy_app/data/repositories/sales_repository.dart';
 import 'package:pharmacy_app/database/database.dart';

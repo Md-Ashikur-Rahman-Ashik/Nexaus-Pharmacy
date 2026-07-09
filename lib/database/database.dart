@@ -26,9 +26,9 @@ class PharmacyDatabase {
     _createTables();
   }
 
-  // PRODUCTION ADDITION: Allow safe shutdown for backups
+  // Allow safe shutdown for backups
   void close() {
-    _db.dispose();
+    _db.close();
   }
 
   void _createTables() {
