@@ -15,15 +15,19 @@ subprojects {
     val newSubprojectBuildDir: Directory = newBuildDir.dir(project.name)
     project.layout.buildDirectory.value(newSubprojectBuildDir)
 }
+
+// Must be before evaluationDependsOn so afterEvaluate callbacks are registered before evaluation
+subprojects {
+    afterEvaluate {
+        val androidExtension = project.extensions.findByName("android") as? com.android.build.gradle.BaseExtension
+        androidExtension?.compileSdkVersion(36)
+    }
+}
+
 subprojects {
     project.evaluationDependsOn(":app")
 }
 
 tasks.register<Delete>("clean") {
     delete(rootProject.layout.buildDirectory)
-}
-
-subprojects {
-    val androidExtension = project.extensions.findByName("android") as? com.android.build.gradle.BaseExtension
-    androidExtension?.compileSdkVersion(36)
 }

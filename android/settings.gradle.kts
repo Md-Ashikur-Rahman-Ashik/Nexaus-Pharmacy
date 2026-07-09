@@ -20,6 +20,8 @@ pluginManagement {
 plugins {
     id("dev.flutter.flutter-plugin-loader") version "1.0.0"
     id("com.android.application") version "9.0.1" apply false
+    // KGP declared here for plugins (share_plus, file_picker) that explicitly apply it.
+    // builtInKotlin is disabled because these plugins haven't migrated yet.
     id("org.jetbrains.kotlin.android") version "2.3.20" apply false
 }
 
