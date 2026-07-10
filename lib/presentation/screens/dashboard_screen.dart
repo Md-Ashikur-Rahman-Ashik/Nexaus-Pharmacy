@@ -127,7 +127,14 @@ class DashboardScreen extends ConsumerWidget {
                   icon: Icons.attach_money,
                   color: Colors.green,
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: 8),
+                _MetricCard(
+                  title: 'আজকের লাভ',
+                  value: '৳${data.todayProfit.toStringAsFixed(0)}',
+                  icon: Icons.trending_up,
+                  color: Colors.indigo,
+                ),
+                const SizedBox(width: 8),
                 _MetricCard(
                   title: 'মোট বাকি',
                   value: '৳${data.totalOutstandingDue.toStringAsFixed(0)}',
@@ -296,32 +303,32 @@ class _MetricCard extends StatelessWidget {
           side: BorderSide(color: color.withValues(alpha: 0.3)),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(12.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
-                  Icon(icon, color: color, size: 20),
-                  const SizedBox(width: 8),
+                  Icon(icon, color: color, size: 18),
+                  const SizedBox(width: 4),
                   Expanded(
                     child: Text(
                       title,
                       style: TextStyle(
                         color: color,
                         fontWeight: FontWeight.w500,
-                        fontSize: 13,
+                        fontSize: 11,
                       ),
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 4),
               Text(
                 value,
                 style: TextStyle(
                   color: color,
-                  fontSize: 22,
+                  fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
               ),
