@@ -3,12 +3,14 @@ import 'package:intl/intl.dart';
 
 class DashboardData {
   final double todaySales;
+  final double todayProfit;
   final double totalOutstandingDue;
   final List<DebtorSummary> topDebtors;
   final List<ExpiringBatch> expiringSoon;
 
   DashboardData({
     required this.todaySales,
+    required this.todayProfit,
     required this.totalOutstandingDue,
     required this.topDebtors,
     required this.expiringSoon,
@@ -40,7 +42,6 @@ class DashboardRepository {
   Future<DashboardData> getDashboardData() async {
     final db = _db.database;
 
-    // Calculate timestamps for "Today"
     final now = DateTime.now();
     final startOfDay = DateTime(
       now.year,
@@ -48,25 +49,37 @@ class DashboardRepository {
       now.day,
     ).millisecondsSinceEpoch;
 
-    // Calculate timestamp for 30 days from now
     final expiryThreshold = now
         .add(const Duration(days: 30))
         .millisecondsSinceEpoch;
 
-    // 1. Today's Total Sales
+
     final salesResult = db.select(
       'SELECT COALESCE(SUM(total_bill), 0) FROM sales_transactions WHERE date >= ?',
       [startOfDay],
     );
     final todaySales = (salesResult.first.columnAt(0) as num).toDouble();
 
-    // 2. Total Outstanding Due (All customers combined)
+
+    final cogsResult = db.select('''
+      SELECT COALESCE(SUM(si.quantity * b.cost_price), 0)
+      FROM sale_items si
+      JOIN sales_transactions st ON si.transaction_id = st.id
+      JOIN batches b ON si.batch_id = b.id
+      WHERE st.date >= ?
+    ''', [startOfDay]);
+    final todayCogs = (cogsResult.first.columnAt(0) as num).toDouble();
+
+
+    final todayProfit = todaySales - todayCogs;
+
+
     final dueResult = db.select(
       'SELECT COALESCE(SUM(total_due), 0) FROM customers WHERE total_due > 0',
     );
     final totalOutstandingDue = (dueResult.first.columnAt(0) as num).toDouble();
 
-    // 3. Top 3 Debtors
+
     final debtorsResult = db.select(
       'SELECT name, total_due FROM customers WHERE total_due > 0 ORDER BY total_due DESC LIMIT 3',
     );
@@ -79,7 +92,7 @@ class DashboardRepository {
         )
         .toList();
 
-    // 4. Expiring Batches (Next 30 days, only if stock > 0)
+
     final expiringResult = db.select(
       '''
       SELECT p.brand_name, b.batch_number, b.expiry_date 
@@ -104,6 +117,7 @@ class DashboardRepository {
 
     return DashboardData(
       todaySales: todaySales,
+      todayProfit: todayProfit,
       totalOutstandingDue: totalOutstandingDue,
       topDebtors: topDebtors,
       expiringSoon: expiringSoon,
